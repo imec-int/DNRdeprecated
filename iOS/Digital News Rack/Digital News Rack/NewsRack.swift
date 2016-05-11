@@ -10,6 +10,9 @@ import Foundation
 import CoreLocation
 
 class NewsRack {
+    
+    static let lastSeenCount = 5
+    
     let name: String
     let accessToName: String
     let accessToUrl: String
@@ -22,7 +25,7 @@ class NewsRack {
     
     var lastSeenBeacon: CLBeacon?
     var beaconRegion: CLRegion?
-    var lastSeenCounter = 3
+    var lastSeenCounter = NewsRack.lastSeenCount
     
     init(name: String, accessToName: String, accessToUrl: String, uuid: NSUUID, majorValue: CLBeaconMajorValue, minorValue: CLBeaconMinorValue) {
         
@@ -36,7 +39,7 @@ class NewsRack {
     }
     
     func resetLastSeenCounter() {
-        lastSeenCounter = 3
+        lastSeenCounter = NewsRack.lastSeenCount
     }
     
     func matchesBeacon(clBeacon: CLBeacon) -> Bool {

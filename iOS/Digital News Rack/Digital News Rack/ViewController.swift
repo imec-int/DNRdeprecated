@@ -114,9 +114,6 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
 
     
     func locationManager(manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], inRegion region: CLBeaconRegion) {
-        print("didRangeBeacons")
-        
-        
         for newsrack in newsracks {
             let matchingBeacons = beacons.filter({ (beacon) -> Bool in
                 return newsrack.matchesBeacon(beacon)
@@ -124,13 +121,15 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
             
             if let matchingBeacon = matchingBeacons.first {
                 newsrack.lastSeenBeacon = matchingBeacon
-                print("activating newsrack by region")
+                print("activating newsrack by entering range", matchingBeacon.accuracy)
+                newsrack.resetLastSeenCounter()
                 activateNewsrack(newsrack)
             }else{
                 newsrack.lastSeenCounter--
+                print(newsrack.lastSeenCounter)
                 if newsrack.lastSeenCounter == 0 {
                     newsrack.resetLastSeenCounter()
-                    print("deactivating newsrack by region")
+                    print("deactivating newsrack by leaving range")
                     deactivateNewsrack(newsrack)
                 }
             }
@@ -138,23 +137,21 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
     }
     
     func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        print("did enter region")
-        
         let n = newsracks.filter { (newsrack) -> Bool in
             return newsrack.beaconRegion == region
         }
         if let newsrack = n.first {
+            print("activating newsrack by entering region")
             activateNewsrack(newsrack)
         }
     }
     
     func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
-        print("did exit region")
-        
         let n = newsracks.filter { (newsrack) -> Bool in
             return newsrack.beaconRegion == region
         }
         if let newsrack = n.first {
+            print("deactivating newsrack by leaving region")
             deactivateNewsrack(newsrack)
         }
     }
