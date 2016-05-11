@@ -11,7 +11,7 @@ import CoreLocation
 
 class NewsRack {
     
-    static let lastSeenCount = 5
+    static let lastSeenCount = 6
     
     let name: String
     let accessToName: String

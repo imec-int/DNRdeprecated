@@ -78,6 +78,11 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
         if newsrack === currentNewsrack { return }
 
         
+        let alert = UIAlertController(title: "Welkom bij \(newsrack.name)", message: "U krijgt nu toegang tot \(newsrack.accessToName)", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+        
+        
         self.labelStatus.text = "Welkom bij \(newsrack.name), u krijgt nu toegang tot \(newsrack.accessToName)"
         webView.loadRequest(NSURLRequest(URL: NSURL(string: newsrack.accessToUrl)!))
         
@@ -90,6 +95,12 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
         currentNewsrack = nil
         webView.loadHTMLString("", baseURL: nil)
         self.labelStatus.text = "Wij kijken uit naar uw volgend bezoek!"
+        
+        
+        
+        let alert = UIAlertController(title: "U verlaat \(newsrack.name)", message: "Bedankt en tot ziens!", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
