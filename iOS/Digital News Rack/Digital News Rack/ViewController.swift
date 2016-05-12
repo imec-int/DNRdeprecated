@@ -19,6 +19,7 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
     var newsracks: [NewsRack] = []
     var webView = WKWebView()
     
+    @IBOutlet weak var labelProximity: UILabel!
     
     var currentNewsrack: NewsRack?
     
@@ -42,7 +43,15 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
         
         
         // Create some news racks:
-        newsracks.append(NewsRack(name: "Dokter Decrock", accessToName: "De Morgen", accessToUrl: "http://www.demorgen.be", uuid: NSUUID(UUIDString: "D0D3FA86-CA76-45EC-9BD9-6AF41F47666B")!, majorValue: 36206, minorValue: 59382))
+        newsracks.append(NewsRack(name: "Dokter De Geyter", accessToName: "De Morgen", accessToUrl: "http://www.demorgen.be", uuid: NSUUID(UUIDString: "D0D3FA86-CA76-45EC-9BD9-6AF41F47666B")!, majorValue: 36206, minorValue: 59382))
+        
+        
+        newsracks.append(NewsRack(name: "Dokter Decrock", accessToName: "De Morgen", accessToUrl: "http://www.demorgen.be", uuid: NSUUID(UUIDString: "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0")!, majorValue: 1234, minorValue: 5678))
+        
+        
+        newsracks.append(NewsRack(name: "Dokter Wauters", accessToName: "Het Laatste Nieuws", accessToUrl: "http://www.hln.be", uuid: NSUUID(UUIDString: "b28122f2-182a-11e6-b6ba-3e1d05defe78")!, majorValue: 4321, minorValue: 5678))
+
+        
         
         
         // Start checking for news racks:
@@ -90,7 +99,7 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
     }
     
     func deactivateNewsrack(newsrack: NewsRack) {
-        if currentNewsrack == nil { return }
+        if currentNewsrack !== newsrack { return }
         
         currentNewsrack = nil
         webView.loadHTMLString("", baseURL: nil)
@@ -125,24 +134,50 @@ class ViewController: UIViewController, WKNavigationDelegate, CLLocationManagerD
 
     
     func locationManager(manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], inRegion region: CLBeaconRegion) {
+        
+        func newsRackNotClose(newsrack: NewsRack) {
+            newsrack.lastSeenCounter--
+            print(newsrack.lastSeenCounter)
+            if newsrack.lastSeenCounter == 0 {
+                newsrack.resetLastSeenCounter()
+                print("deactivating newsrack by leaving range", newsrack.name)
+                deactivateNewsrack(newsrack)
+            }
+        }
+        
+        
         for newsrack in newsracks {
             let matchingBeacons = beacons.filter({ (beacon) -> Bool in
                 return newsrack.matchesBeacon(beacon)
             })
             
+            
+            
             if let matchingBeacon = matchingBeacons.first {
-                newsrack.lastSeenBeacon = matchingBeacon
-                print("activating newsrack by entering range", matchingBeacon.accuracy)
-                newsrack.resetLastSeenCounter()
-                activateNewsrack(newsrack)
-            }else{
-                newsrack.lastSeenCounter--
-                print(newsrack.lastSeenCounter)
-                if newsrack.lastSeenCounter == 0 {
-                    newsrack.resetLastSeenCounter()
-                    print("deactivating newsrack by leaving range")
-                    deactivateNewsrack(newsrack)
+                
+                // debug distance on screen:
+                switch matchingBeacon.proximity {
+                case CLProximity.Unknown:
+                    self.labelProximity.text = "Unknown"
+                case CLProximity.Immediate:
+                    self.labelProximity.text = "Immediate"
+                case CLProximity.Near:
+                    self.labelProximity.text = "Near"
+                case CLProximity.Far:
+                    self.labelProximity.text = "Far"
+                    
                 }
+                
+                if matchingBeacon.proximity == CLProximity.Immediate || matchingBeacon.proximity == CLProximity.Near {
+                    newsrack.lastSeenBeacon = matchingBeacon
+                    print("activating newsrack by entering range", newsrack.name, matchingBeacon.accuracy)
+                    newsrack.resetLastSeenCounter()
+                    activateNewsrack(newsrack)
+                }else{
+                    newsRackNotClose(newsrack)
+                }
+            }else{
+                newsRackNotClose(newsrack)
             }
         }
     }

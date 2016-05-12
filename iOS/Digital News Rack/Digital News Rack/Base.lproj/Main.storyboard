@@ -28,6 +28,12 @@
                                 <rect key="frame" x="20" y="57" width="560" height="523"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKO-Ey-ZjF">
+                                <rect key="frame" x="376" y="28" width="204" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -38,9 +44,11 @@
                             <constraint firstItem="aem-BG-8sI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="dIs-qg-bdI"/>
                             <constraint firstItem="fCB-4g-1tF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="fkI-BL-Lqq"/>
                             <constraint firstItem="aem-BG-8sI" firstAttribute="top" secondItem="fCB-4g-1tF" secondAttribute="bottom" constant="8" id="fks-ZW-4eJ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aKO-Ey-ZjF" secondAttribute="trailing" id="p8y-zf-F1V"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="labelProximity" destination="aKO-Ey-ZjF" id="rPH-1n-FQ2"/>
                         <outlet property="labelStatus" destination="fCB-4g-1tF" id="IeM-6o-Kup"/>
                         <outlet property="viewBrowserPlaceholder" destination="aem-BG-8sI" id="2Pj-01-hnt"/>
                     </connections>
