@@ -1,4 +1,4 @@
-# Digital-News-Rack
+# Digital-News-Rack (Deprecated!!!)
 DNI project met de persgroep
 
 ## iOS
